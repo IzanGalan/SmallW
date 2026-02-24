@@ -20,20 +20,35 @@
     Buscar
 </button>
 
+
+
+<div class="container mt-3">
+    <h2 id="titulo"> </h2>
+    <table class="table table-dark table-striped">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Followers</th>
+        </tr>
+        </thead>
+
+
+    </table>
+</div>
+
 <script>
-    const boton = document.getElementById('btnBuscar');
-    console.log("Botón:", boton);
+    const boton = document.getElementById("btnBuscar");
+    boton.addEventListener("click", function() {
+        const User = document.getElementById("githubUser").value;
 
-    boton.addEventListener("click", function(){
-        const input = document.getElementById('githubUser');
-        console.log("Input:", input);
+        const UsuarioTitulo = document.getElementById("titulo");
+        UsuarioTitulo.textContent= "Información sobre los repositorios de " + User;
 
-        const usuario = input.value;
-        console.log(usuario);
+
+
     });
 </script>
-
-
 
 </body>
 </html>
