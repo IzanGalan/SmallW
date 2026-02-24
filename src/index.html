@@ -10,5 +10,30 @@
 </head>
 <body>
 
+<t>Introduce tu <b>GitHub User</b></t>
+<div class="form-floating mb-3 mt-3">
+    <input type="text" class="form-control" id="githubUser" placeholder="Enter GitHub User">
+    <label for="githubUser">GitHub User</label>
+</div>
+
+<button id="btnBuscar" class="btn btn-primary">
+    Buscar
+</button>
+
+<script>
+    const boton = document.getElementById('btnBuscar');
+    console.log("Botón:", boton);
+
+    boton.addEventListener("click", function(){
+        const input = document.getElementById('githubUser');
+        console.log("Input:", input);
+
+        const usuario = input.value;
+        console.log(usuario);
+    });
+</script>
+
+
+
 </body>
 </html>
