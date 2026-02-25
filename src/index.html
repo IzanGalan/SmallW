@@ -29,22 +29,42 @@
         <tr>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th>Followers</th>
+            <th>ID</th>
         </tr>
         </thead>
-
-
+        <tbody id="RepoBody"></tbody>
     </table>
 </div>
 
 <script>
     const boton = document.getElementById("btnBuscar");
-    boton.addEventListener("click", function() {
+    const RepoBody = document.getElementById("RepoBody");
+    boton.addEventListener("click", async function () {
         const User = document.getElementById("githubUser").value;
 
         const UsuarioTitulo = document.getElementById("titulo");
-        UsuarioTitulo.textContent= "Información sobre los repositorios de " + User;
+        UsuarioTitulo.textContent = "Información sobre los repositorios de " + User;
+        if (!User) {
+            UsuarioTitulo.textContent = "No se encontrado en el usuario";
+            return;
+        }
+        const [userResponse, reposResponse, followersResponse] = await Promise.all([
+            fetch("https://api.github.com/users/" + encodeURIComponent(User)),
+            fetch("https://api.github.com/users/" + encodeURIComponent(User) + "/repos?per_page=100&sort=updated"),
+            fetch("")
+        ]);
+        const usuario = await userResponse.json();
+        const DatosRepos = await reposResponse.json();
 
+        RepoBody.innerHTML = DatosRepos.map(function(repo) {
+            const description = repo.description ? repo.description : "Sin descripción";
+            return "<tr>" +
+                "<td>" + repo.name + "</td>" +
+                "<td>" + repo.description + "</td>" +
+                "<td>" + repo.id+"</td>"
+
+                "</tr>";
+        }).join("");
 
 
     });
