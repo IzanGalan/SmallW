@@ -20,15 +20,13 @@
     Buscar
 </button>
 
-
-
 <div class="container mt-3">
     <h2 id="titulo"> </h2>
     <table class="table table-dark table-striped">
         <thead>
         <tr>
             <th>Nombre</th>
-            <th>Descripción</th>
+            <th>Descripcion</th>
             <th>ID</th>
         </tr>
         </thead>
@@ -38,35 +36,42 @@
 
 <script>
     const boton = document.getElementById("btnBuscar");
-    const RepoBody = document.getElementById("RepoBody");
-    boton.addEventListener("click", async function () {
-        const User = document.getElementById("githubUser").value;
+    const repoBody = document.getElementById("RepoBody");
 
-        const UsuarioTitulo = document.getElementById("titulo");
-        UsuarioTitulo.textContent = "Información sobre los repositorios de " + User;
-        if (!User) {
-            UsuarioTitulo.textContent = "No se encontrado en el usuario";
+    boton.addEventListener("click", async function () {
+        const user = document.getElementById("githubUser").value.trim();
+        const usuarioTitulo = document.getElementById("titulo");
+
+        if (!user) {
+            usuarioTitulo.textContent = "Ingresa un usuario de GitHub.";
+            repoBody.innerHTML = "";
             return;
         }
-        const [userResponse, reposResponse, followersResponse] = await Promise.all([
-            fetch("https://api.github.com/users/" + encodeURIComponent(User)),
-            fetch("https://api.github.com/users/" + encodeURIComponent(User) + "/repos?per_page=100&sort=updated"),
-            fetch("")
-        ]);
-        const usuario = await userResponse.json();
-        const DatosRepos = await reposResponse.json();
 
-        RepoBody.innerHTML = DatosRepos.map(function(repo) {
-            const description = repo.description ? repo.description : "Sin descripción";
+        const [userResponse, reposResponse] = await Promise.all([
+            fetch("https://api.github.com/users/" + encodeURIComponent(user)),
+            fetch("https://api.github.com/users/" + encodeURIComponent(user) + "/repos?per_page=100&sort=updated")
+        ]);
+
+        if (!userResponse.ok || !reposResponse.ok) {
+            usuarioTitulo.textContent = "No se encontro el usuario o hubo un error en la consulta.";
+            repoBody.innerHTML = "";
+            return;
+        }
+
+        const usuario = await userResponse.json();
+        const datosRepos = await reposResponse.json();
+
+        usuarioTitulo.textContent = "Usuario: " + usuario.login + " Cantidad de repositorios: " + usuario.public_repos;
+
+        repoBody.innerHTML = datosRepos.map(function (repo) {
+            const description = repo.description ? repo.description : "Sin descripcion";
             return "<tr>" +
                 "<td>" + repo.name + "</td>" +
-                "<td>" + repo.description + "</td>" +
-                "<td>" + repo.id+"</td>"
-
+                "<td>" + description + "</td>" +
+                "<td>" + repo.id + "</td>" +
                 "</tr>";
         }).join("");
-
-
     });
 </script>
 
